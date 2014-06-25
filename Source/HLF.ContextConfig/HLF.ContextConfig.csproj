@@ -31,7 +31,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -43,13 +45,26 @@
   <ItemGroup>
     <Compile Include="ConfigSettings.cs" />
     <Compile Include="ContextConfig.cs" />
-    <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="config\ContextConfig.config" />
+    <None Include="ContextConfig.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>XCOPY "$(TargetDir)$(TargetName).*" "$(SolutionDir)build-bin\" /Y
+XCOPY "$(ProjectDir)bin\*.dll" "$(SolutionDir)build-bin\" /Y
+if exist "$(ProjectDir)Dependencies\" XCOPY "$(ProjectDir)Dependencies\*.dll" "$(SolutionDir)build-bin\" /Y
+if exist "$(ProjectDir)config\" XCOPY "$(ProjectDir)config\*.config" "$(SolutionDir)build-config\" /Y
+XCOPY "$(ProjectDir)*.config" "$(SolutionDir)build-config\" /Y
+XCOPY "$(ProjectDir)*.cshtml" "$(SolutionDir)build-macroScripts\" /Y
+XCOPY "$(ProjectDir)*.ascx" "$(SolutionDir)build-usercontrols\" /Y
+XCOPY "$(ProjectDir)Scripts\*.js" "$(SolutionDir)build-scripts\" /Y
+XCOPY "$(ProjectDir)*.ashx" "$(SolutionDir)build-etc\" /Y
+XCOPY "$(ProjectDir)*.asmx" "$(SolutionDir)build-etc\" /Y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
