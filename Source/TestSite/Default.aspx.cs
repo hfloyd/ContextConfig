@@ -9,11 +9,13 @@ namespace TestSite
         {
             Response.Write("Hello!<br/><hr/>");
 
-            //Response.Write("<h3>All Config Data</h3>");
-            //WriteData();
-            //Response.Write("<hr/>");
+            Response.Write("<h3>All Configuration Data</h3>");
+            Response.Write("<p><b>(Using the 'ConfigSettings' class)</b></p>");
+            WriteData();
+            Response.Write("<hr/>");
 
             Response.Write("<h3>Testing Functions</h3>");
+            Response.Write("<p><b>(Using the 'ContextConfig' class)</b></p>");
             LookupStuff();
             Response.Write("<hr/>");
         }
@@ -167,8 +169,6 @@ namespace TestSite
 
         }
 
-
-
         private void WriteData()
         {
             string Version = ConfigSettings.Settings.Version;
@@ -207,8 +207,6 @@ namespace TestSite
                 Response.Write("</ul>");
             }
             Response.Write("<br/>");
-
-
 
         }
     }

@@ -1,29 +1,27 @@
-# Context Config C# library#
+# Context Config C# Library#
 
-This library allows you to set configuration values dependent upon which web server environment the code is currently running in. Environments are defined using the hostname (url) that the page is operating from. Multiple urls can be set for each environment, along with an optional "catch-all" indicating what environment should be assumed if the current domain doesn't match 
+This library allows you to set configuration values dependent upon which web server environment the code is currently running in. Environments are defined using the hostname (url) that the page is operating from. Multiple urls can be set for each environment, along with an optional "catch-all" indicating what environment should be assumed if the current domain doesn't match.
 
-### What is this repository for? ###
+*Compiled against .Net v. 4.5*
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+## What is included? ##
 
-### How do I get set up? ###
+* Releases : Pre-compiled code ready to use as-is, documentation
+* Solution :	Visual Studio .sln file and build output folders
+* Source :
+* * Documentation : Sandcastle Documentation project (ready-to-use documentation is located in the Releases folder)
+* * HLF.ContextConfig project : All code required to operate, example config file
+* * TestSite project : Single-page website demonstrating usage
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+## Installation & Usage ##
 
-### Contribution guidelines ###
+###ASP.Net Website###
+The code can be used in any ASP.Net website by copying the files from 'Releases\Basic Compiled\Version X' to your site, customizing the example .config file, and referencing "HLF.ContextConfig" in your code.
 
-* Writing tests
-* Code review
-* Other guidelines
+###Umbraco CMS Website###
+*Umbraco package coming soon!*
 
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+### Created by ###
+Heather Floyd
+twitter: @HFloyd
+[www.HeatherFloyd.com](http://www.HeatherFloyd.com)

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HLF.ContextConfig</name>
+    </assembly>
+    <members>
+        <member name="T:HLF.ContextConfig.ConfigSettings">
+            <summary>
+            The 'ConfigSettings' class give you direct access to all the configured data using collections and dot(.) notation.
+            *Note: you will need to explicitly declare objects of the element types in order to use their properties.
+            example:
+            foreach (DomainElement Domain in ConfigSettings.Settings.Domains)
+            { string EnvironmentName =  Domain.Environment;}
+            </summary>
+        </member>
+        <member name="T:HLF.ContextConfig.ContextConfig">
+            <summary>
+            The 'ContextConfig' static class includes useful functions to test and return data about domains, environments, and configured key/value pairs.
+            </summary>
+        </member>
+        <member name="F:HLF.ContextConfig.ContextConfig.CurrentDomain">
+            <summary>
+            Current active domain url
+            </summary>
+        </member>
+        <member name="M:HLF.ContextConfig.ContextConfig.DomainIsConfigured(System.Boolean)">
+            <summary>
+            Check whether the current domain exists in the Domains list
+            </summary>
+            <param name="AcceptWildcard">If there is a wildcard (*) domain specified, return true? (Choose false to explicitly search for this url)</param>
+            <returns></returns>
+        </member>
+        <member name="M:HLF.ContextConfig.ContextConfig.DomainIsConfigured(System.String,System.Boolean)">
+            <summary>
+            Check whether the URL exists in the Domains list
+            </summary>
+            <param name="DomainUrl">Url to lookup</param>
+            <param name="AcceptWildcard">If there is a wildcard (*) domain specified, return true? (Choose false to explicitly search for this url)</param>
+            <returns></returns>
+        </member>
+        <member name="M:HLF.ContextConfig.ContextConfig.DomainEnvironmentName">
+            <summary>
+            Get the environment name for the current domain
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HLF.ContextConfig.ContextConfig.DomainEnvironmentName(System.String)">
+            <summary>
+            Get the environment name for the provided domain url
+            </summary>
+            <param name="DomainUrl">Url to lookup</param>
+            <returns></returns>
+        </member>
+        <member name="M:HLF.ContextConfig.ContextConfig.EnvironmentIsConfigured(System.Boolean)">
+            <summary>
+            Check whether the current environment exists in the Environments list
+            </summary>
+            <param name="AcceptDefault">If there is a "default" domain specified, return true? (Choose false to explicitly search for this environment)</param>
+            <returns></returns>
+        </member>
+        <member name="M:HLF.ContextConfig.ContextConfig.EnvironmentIsConfigured(System.String,System.Boolean)">
+            <summary>
+            Check whether the current environment exists in the Environments list
+            </summary>
+            <param name="DomainUrl">Url to lookup</param>
+            <param name="AcceptDefault">If there is a "default" domain specified, return true? (Choose false to explicitly search for this environment)</param>
+            <returns></returns>
+        </member>
+        <member name="M:HLF.ContextConfig.ContextConfig.GetValue(System.String)">
+            <summary>
+            Get the value for a given key on the current domain
+            </summary>
+            <param name="ConfigKey">Key name</param>
+            <returns></returns>
+        </member>
+        <member name="M:HLF.ContextConfig.ContextConfig.GetValue(System.String,System.String)">
+            <summary>
+            Get the value when providing a key and environment name
+            </summary>
+            <param name="ConfigKey">Key name</param>
+            <param name="EnvironmentName">Environment name</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -8,6 +8,9 @@ using System.Web;
 
 namespace HLF.ContextConfig
 {
+    /// <summary>
+    /// The 'ContextConfig' static class includes useful functions to test and return data about domains, environments, and configured key/value pairs.
+    /// </summary>
     public static class ContextConfig
     {
 
@@ -218,7 +221,6 @@ namespace HLF.ContextConfig
 
         #endregion
 
-
         #region Key/Value Configs
 
         /// <summary>
@@ -283,6 +285,7 @@ namespace HLF.ContextConfig
 
     #region *** Custom Exceptions ***
 
+    [Serializable]
     internal class MissingDomainConfigException : Exception
     {
         // Use the default ApplicationException constructors
@@ -299,6 +302,7 @@ namespace HLF.ContextConfig
         }
     }
 
+    [Serializable]
     internal class MissingEnvironmentConfigException : Exception
     {
         // Use the default ApplicationException constructors
@@ -315,6 +319,7 @@ namespace HLF.ContextConfig
         }
     }
 
+    [Serializable]
     internal class MissingConfigKeyException : Exception
     {
         // Use the default ApplicationException constructors

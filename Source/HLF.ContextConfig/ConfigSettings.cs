@@ -8,6 +8,13 @@ using System.Web;
 
 namespace HLF.ContextConfig
 {
+    /// <summary>
+    /// The 'ConfigSettings' class give you direct access to all the configured data using collections and dot(.) notation.
+    /// *Note: you will need to explicitly declare objects of the element types in order to use their properties.
+    /// example:
+    /// foreach (DomainElement Domain in ConfigSettings.Settings.Domains)
+    /// { string EnvironmentName =  Domain.Environment;}
+    /// </summary>
     public class ConfigSettings : ConfigurationSection
     {
         //Config File Object
@@ -79,7 +86,6 @@ namespace HLF.ContextConfig
         #endregion
 
     }
-
 
     #region *** Element Objects ***
 
@@ -278,6 +284,7 @@ namespace HLF.ContextConfig
 
     #region *** Custom Exceptions ***
 
+    [Serializable]
     internal class MissingConfigFileException : Exception
     {
         // Use the default ApplicationException constructors
