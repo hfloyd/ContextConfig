@@ -18,13 +18,16 @@ namespace HLF.ContextConfig
 
         public static ConfigSettings GetSettings()
         {
-            //try
-            //{
-                ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap();
-                fileMap.ExeConfigFilename =
-                        HttpContext.Current.Server.MapPath(string.Format("~/config/{0}", _configfile));
+            ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap();
+            fileMap.ExeConfigFilename = HttpContext.Current.Server.MapPath(string.Format("~/config/{0}", _configfile));
 
-                if (System.IO.File.Exists(fileMap.ExeConfigFilename))
+            if (! System.IO.File.Exists(fileMap.ExeConfigFilename))
+            {
+                //if file doesn't exist in /config/ folder, check in site root.
+                fileMap.ExeConfigFilename = HttpContext.Current.Server.MapPath(string.Format("~/{0}", _configfile));
+            }
+
+            if (System.IO.File.Exists(fileMap.ExeConfigFilename))
                 {
                     // load the settings file
                     config = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
@@ -34,52 +37,51 @@ namespace HLF.ContextConfig
                         _Config = (ConfigSettings)config.GetSection("ContextConfig");
                     }
                 }
-            //}
-            //catch (Exception ex)
-            //{
-            //   // _Errors.Add(string.Format("Error loading settings file {0}", ex.ToString()));
-            //        //LogHelper.Info<uSyncSettings>("Error loading settings file {0}", () => ex.ToString());
-            //}
-            //finally
-            //{
+            else
+            {
+                string ErrorMsg = string.Format("The 'ContextConfig.config' file cannot be found. Please add it to the '~/config/' folder or site root.");
+                throw new MissingConfigFileException(ErrorMsg);
+            }
 
-                if (_Config == null)
-                {
-                    //_Errors.Add(string.Format("WARNING: Working with no config file"));
-                    //LogHelper.Info<uSyncSettings>("WARNING: Working with no config file");
-                    _Config = new ConfigSettings(); // default config - won't be savable mind?
-                }
-           // }
+            if (_Config == null)
+            {
+                string ErrorMsg = string.Format("There is something wrong with the 'ContextConfig.config' file. Please check that a properly formatted file is located in the '~/config/' folder or site root.");
+                throw new MissingConfigFileException(ErrorMsg);
+                //_Config = new ConfigSettings(); // default config - won't be savable mind?
+            }
+
             return _Config;
         }
 
-
-        //*** ConfigurationProperties ***
+        #region *** ConfigurationProperties ***
 
         //<ContextConfig> 'version' attribute
         [ConfigurationProperty("version")]
         public string Version
         {
-            get { return (string)base["version"]; }
+            get { return (string) base["version"]; }
         }
 
         //<ContextConfig> <Domains> collection
         [ConfigurationProperty("Domains")]
         public DomainElementCollection Domains
         {
-            get { return (DomainElementCollection)base["Domains"]; }
+            get { return (DomainElementCollection) base["Domains"]; }
         }
 
         //<ContextConfig> <Environments> collection
         [ConfigurationProperty("Environments")]
         public EnvironmentElementCollection Environments
         {
-            get { return (EnvironmentElementCollection)base["Environments"]; }
+            get { return (EnvironmentElementCollection) base["Environments"]; }
         }
+
+        #endregion
 
     }
 
-    //*** Element Objects ***
+
+    #region *** Element Objects ***
 
     public class DomainElement : ConfigurationElement
     {
@@ -87,14 +89,14 @@ namespace HLF.ContextConfig
         [ConfigurationProperty("url", IsRequired = true)]
         public string Url
         {
-            get { return (string)base["url"]; }
+            get { return (string) base["url"]; }
         }
 
         //<Domain> 'environment' attribute
         [ConfigurationProperty("environment", IsRequired = true)]
         public string Environment
         {
-            get { return (string)base["environment"]; }
+            get { return (string) base["environment"]; }
         }
     }
 
@@ -104,14 +106,14 @@ namespace HLF.ContextConfig
         [ConfigurationProperty("name", IsRequired = true)]
         public string Name
         {
-            get { return (string)base["name"]; }
+            get { return (string) base["name"]; }
         }
 
         //<Environment> <Configs> (key/values) collection
         [ConfigurationProperty("Configs")]
         public KeyValueElementCollection Configs
         {
-            get { return (KeyValueElementCollection)base["Configs"]; }
+            get { return (KeyValueElementCollection) base["Configs"]; }
         }
 
     }
@@ -122,20 +124,23 @@ namespace HLF.ContextConfig
         [ConfigurationProperty("key", IsRequired = true)]
         public string Key
         {
-            get { return (string)base["key"]; }
+            get { return (string) base["key"]; }
         }
 
         //<Environment> <add> 'value' attribute
         [ConfigurationProperty("value", IsRequired = false)]
         public string Value
         {
-            get { return (string)base["value"]; }
+            get { return (string) base["value"]; }
         }
     }
 
-    //*** Element Collections ***
+    #endregion
 
-    [ConfigurationCollection(typeof(DomainElement), AddItemName = "Domain", CollectionType = ConfigurationElementCollectionType.BasicMap)]
+    #region *** Element Collections ***
+
+    [ConfigurationCollection(typeof (DomainElement), AddItemName = "Domain",
+        CollectionType = ConfigurationElementCollectionType.BasicMap)]
     public class DomainElementCollection : ConfigurationElementCollection
     {
         protected override string ElementName
@@ -156,7 +161,7 @@ namespace HLF.ContextConfig
 
         public DomainElement this[int index]
         {
-            get { return (DomainElement)base.BaseGet(index); }
+            get { return (DomainElement) base.BaseGet(index); }
             set
             {
                 if (base.BaseGet(index) != null)
@@ -175,11 +180,12 @@ namespace HLF.ContextConfig
 
         public DomainElement this[string url]
         {
-            get { return (DomainElement)base.BaseGet(url); }
+            get { return (DomainElement) base.BaseGet(url); }
         }
     }
 
-    [ConfigurationCollection(typeof(EnvironmentElement), AddItemName = "Environment", CollectionType = ConfigurationElementCollectionType.BasicMap)]
+    [ConfigurationCollection(typeof (EnvironmentElement), AddItemName = "Environment",
+        CollectionType = ConfigurationElementCollectionType.BasicMap)]
     public class EnvironmentElementCollection : ConfigurationElementCollection
     {
         protected override string ElementName
@@ -200,7 +206,7 @@ namespace HLF.ContextConfig
 
         public EnvironmentElement this[int index]
         {
-            get { return (EnvironmentElement)base.BaseGet(index); }
+            get { return (EnvironmentElement) base.BaseGet(index); }
             set
             {
                 if (base.BaseGet(index) != null)
@@ -219,11 +225,12 @@ namespace HLF.ContextConfig
 
         public EnvironmentElement this[string name]
         {
-            get { return (EnvironmentElement)base.BaseGet(name); }
+            get { return (EnvironmentElement) base.BaseGet(name); }
         }
     }
 
-    [ConfigurationCollection(typeof(KeyValueElement), AddItemName = "add", CollectionType = ConfigurationElementCollectionType.BasicMap)]
+    [ConfigurationCollection(typeof (KeyValueElement), AddItemName = "add",
+        CollectionType = ConfigurationElementCollectionType.BasicMap)]
     public class KeyValueElementCollection : ConfigurationElementCollection
     {
         protected override string ElementName
@@ -244,7 +251,7 @@ namespace HLF.ContextConfig
 
         public KeyValueElement this[int index]
         {
-            get { return (KeyValueElement)base.BaseGet(index); }
+            get { return (KeyValueElement) base.BaseGet(index); }
             set
             {
                 if (base.BaseGet(index) != null)
@@ -263,8 +270,32 @@ namespace HLF.ContextConfig
 
         public KeyValueElement this[string key]
         {
-            get { return (KeyValueElement)base.BaseGet(key); }
+            get { return (KeyValueElement) base.BaseGet(key); }
         }
     }
 
+    #endregion
+
+    #region *** Custom Exceptions ***
+
+    internal class MissingConfigFileException : Exception
+    {
+        // Use the default ApplicationException constructors
+        public MissingConfigFileException()
+            : base()
+        {
+        }
+
+        public MissingConfigFileException(string s)
+            : base(s)
+        {
+        }
+
+        public MissingConfigFileException(string s, Exception ex)
+            : base(s, ex)
+        {
+        }
+    }
+
+    #endregion
 }

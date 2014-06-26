@@ -103,7 +103,7 @@ namespace HLF.ContextConfig
                 else
                 {
                     string ErrorMsg = string.Format("Domain '{0}' is not configured, and there is no wildcard (*) domain configured", DomainUrl);
-                throw new MissingDomainConfigException(ErrorMsg);
+                    throw new MissingDomainConfigException(ErrorMsg);
                 }
             }
             
@@ -281,27 +281,56 @@ namespace HLF.ContextConfig
 
     }
 
-    class MissingDomainConfigException : Exception
+    #region *** Custom Exceptions ***
+
+    internal class MissingDomainConfigException : Exception
     {
         // Use the default ApplicationException constructors
-        public MissingDomainConfigException() : base() { }
-        public MissingDomainConfigException(string s) : base(s) { }
-        public MissingDomainConfigException(string s, Exception ex) : base(s, ex) { }
+        public MissingDomainConfigException() : base()
+        {
+        }
+
+        public MissingDomainConfigException(string s) : base(s)
+        {
+        }
+
+        public MissingDomainConfigException(string s, Exception ex) : base(s, ex)
+        {
+        }
     }
 
-    class MissingEnvironmentConfigException : Exception
+    internal class MissingEnvironmentConfigException : Exception
     {
         // Use the default ApplicationException constructors
-        public MissingEnvironmentConfigException() : base() { }
-        public MissingEnvironmentConfigException(string s) : base(s) { }
-        public MissingEnvironmentConfigException(string s, Exception ex) : base(s, ex) { }
+        public MissingEnvironmentConfigException() : base()
+        {
+        }
+
+        public MissingEnvironmentConfigException(string s) : base(s)
+        {
+        }
+
+        public MissingEnvironmentConfigException(string s, Exception ex) : base(s, ex)
+        {
+        }
     }
 
-    class MissingConfigKeyException : Exception
+    internal class MissingConfigKeyException : Exception
     {
         // Use the default ApplicationException constructors
-        public MissingConfigKeyException() : base() { }
-        public MissingConfigKeyException(string s) : base(s) { }
-        public MissingConfigKeyException(string s, Exception ex) : base(s, ex) { }
+        public MissingConfigKeyException() : base()
+        {
+        }
+
+        public MissingConfigKeyException(string s) : base(s)
+        {
+        }
+
+        public MissingConfigKeyException(string s, Exception ex) : base(s, ex)
+        {
+        }
     }
+
+    #endregion
+
 }
