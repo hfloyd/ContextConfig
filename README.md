@@ -9,9 +9,9 @@ This library allows you to set configuration values dependent upon which web ser
 * Releases : Pre-compiled code ready to use as-is, documentation
 * Solution :	Visual Studio .sln file and build output folders
 * Source :
-* * Documentation : Sandcastle Documentation project (ready-to-use documentation is located in the Releases folder)
-* * HLF.ContextConfig project : All code required to operate, example config file
-* * TestSite project : Single-page website demonstrating usage
+	* Documentation : Sandcastle Documentation project (ready-to-use documentation is located in the Releases folder)
+	* HLF.ContextConfig project : All code required to operate, example config file
+	* TestSite project : Single-page website demonstrating usage
 
 ## Installation & Usage ##
 
@@ -23,5 +23,5 @@ The code can be used in any ASP.Net website by copying the files from 'Releases\
 
 ### Created by ###
 Heather Floyd
-twitter: @HFloyd
-[www.HeatherFloyd.com](http://www.HeatherFloyd.com)
+* twitter: @HFloyd
+* [www.HeatherFloyd.com](http://www.HeatherFloyd.com)
