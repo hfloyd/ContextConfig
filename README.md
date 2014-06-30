@@ -21,7 +21,10 @@ The code can be used in any ASP.Net website by copying the files from 'Releases\
 ###Umbraco CMS Website###
 *Umbraco package coming soon!*
 
-### Created by ###
+## Created by ##
 Heather Floyd
 * twitter: @HFloyd
 * [www.HeatherFloyd.com](http://www.HeatherFloyd.com)
+
+### Acknowledgements ###
+Thank you,  Mike Barlow, for a fantastic, clean way of dealing with xml config files:  [KickStart – C# Custom Configuration](http://bardevblog.wordpress.com/2013/11/17/kickstart-c-custom-configuration/)
