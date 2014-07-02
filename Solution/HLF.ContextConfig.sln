@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HLF.ContextConfig", "..\Sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSite", "..\Source\TestSite\TestSite.csproj", "{C1610FCA-E918-4232-A444-A34F613E142D}"
 EndProject
-Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Documentation", "..\Source\Sandcastle Documentation\Documentation.shfbproj", "{59A10989-F3AE-4F08-86FF-F897A8842CFF}"
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Documentation", "..\Source\Documentation\Documentation.shfbproj", "{59A10989-F3AE-4F08-86FF-F897A8842CFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

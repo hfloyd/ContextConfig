@@ -64,7 +64,7 @@ namespace HLF.ContextConfig
         }
 
         /// <summary>
-        /// Get the environment name for the current domain
+        /// Get the Environment name for the current domain
         /// </summary>
         /// <returns></returns>
         public static string DomainEnvironmentName()
@@ -80,7 +80,7 @@ namespace HLF.ContextConfig
         }
 
         /// <summary>
-        /// Get the environment name for the provided domain url
+        /// Get the Environment name for the provided domain url
         /// </summary>
         /// <param name="DomainUrl">Url to lookup</param>
         /// <returns></returns>
@@ -113,6 +113,56 @@ namespace HLF.ContextConfig
             return ReturnValue;
         }
 
+        /// <summary>
+        /// Get the Site Name for the current domain
+        /// </summary>
+        /// <returns></returns>
+        public static string DomainSiteName()
+        {
+            string ReturnValue = "";
+
+            //Get domain from config file
+            DomainElement Domain = ConfigSettings.Settings.Domains[CurrentDomain];
+
+            ReturnValue = Domain.SiteName;
+
+            return ReturnValue;
+        }
+
+        /// <summary>
+        /// Get the Site Name for the provided domain url
+        /// </summary>
+        /// <param name="DomainUrl">Url to lookup</param>
+        /// <returns></returns>
+        public static string DomainSiteName(string DomainUrl)
+        {
+            string ReturnValue = "";
+
+            //Get domain from config file
+            DomainElement Domain = ConfigSettings.Settings.Domains[DomainUrl];
+
+            if (Domain != null)
+            {
+                ReturnValue = Domain.SiteName;
+            }
+            else
+            {
+                //look for wildcard domain
+                DomainElement DomainWild = ConfigSettings.Settings.Domains["*"];
+                if (DomainWild != null)
+                {
+                    ReturnValue = DomainWild.SiteName;
+                }
+                else
+                {
+                    string ErrorMsg = string.Format("Domain '{0}' is not configured, and there is no wildcard (*) domain configured", DomainUrl);
+                    throw new MissingDomainConfigException(ErrorMsg);
+                }
+            }
+
+            return ReturnValue;
+        }
+
         #endregion
 
         #region Environment Info
@@ -130,7 +180,7 @@ namespace HLF.ContextConfig
         /// <summary>
         /// Check whether the current environment exists in the Environments list
         /// </summary>
-        /// <param name="DomainUrl">Url to lookup</param>
+        /// <param name="EnvironmentName">Name to lookup</param>
         /// <param name="AcceptDefault">If there is a "default" domain specified, return true? (Choose false to explicitly search for this environment)</param>
         /// <returns></returns>
         public static bool EnvironmentIsConfigured(string EnvironmentName, bool AcceptDefault = true)
@@ -168,7 +218,7 @@ namespace HLF.ContextConfig
                 DomainElement Domain = ConfigSettings.Settings.Domains[DomainUrl];
                 EnvName = Domain.Environment;
             }
-            catch (Exception Exception1)
+            catch (Exception )
             {
                 try
                 {
@@ -178,7 +228,7 @@ namespace HLF.ContextConfig
                 catch (Exception Exception2)
                 {
                     string ErrorMsg = string.Format("Domain '{0}' is not configured, and there is no wildcard (*) domain configured", DomainUrl);
-                    throw new MissingDomainConfigException(ErrorMsg);
+                    throw new MissingDomainConfigException(ErrorMsg, Exception2);
                 }
             }
 
@@ -202,7 +252,7 @@ namespace HLF.ContextConfig
                 //Get environment from config file
                 ReturnValue = ConfigSettings.Settings.Environments[EnvironmentName];
             }
-            catch (Exception Exception1)
+            catch (Exception )
             {
                 try
                 {
@@ -212,7 +262,7 @@ namespace HLF.ContextConfig
                 catch (Exception Exception2)
                 {
                     string ErrorMsg = string.Format("Environment '{0}' is not configured, and there is no 'default' environment configured", EnvironmentName);
-                    throw new MissingEnvironmentConfigException(ErrorMsg);
+                    throw new MissingEnvironmentConfigException(ErrorMsg, Exception2);
                 }
             }
 
@@ -272,7 +322,7 @@ namespace HLF.ContextConfig
             catch (Exception Exception1)
             {
                 string ErrorMsg = string.Format("Key '{0}' is not configured for Environment '{1}', and there is no default key configured", ConfigKey, EnvironmentName);
-                throw new MissingConfigKeyException(ErrorMsg);
+                throw new MissingConfigKeyException(ErrorMsg, Exception1);
             }
 
             return ReturnValue;

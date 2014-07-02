@@ -20,155 +20,6 @@ namespace TestSite
             Response.Write("<hr/>");
         }
 
-        private void LookupStuff()
-        {
-            try
-            {
-                string B = ContextConfig.CurrentDomain;
-                Response.Write(string.Format("ContextConfig.CurrentDomain = {0} <br/>", B));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string D = ContextConfig.DomainIsConfigured().ToString();
-                Response.Write(string.Format("ContextConfig.DomainIsConfigured() = {0} <br/>", D));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-
-                string F = ContextConfig.DomainIsConfigured("xyz.com").ToString();
-                Response.Write(string.Format("ContextConfig.DomainIsConfigured(\"xyz.com\") = {0} <br/>", F));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string G = ContextConfig.DomainIsConfigured("xyz.com", false).ToString();
-                Response.Write(string.Format("ContextConfig.DomainIsConfigured(\"xyz.com\", false) = {0} <br/>", G));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string E = ContextConfig.DomainEnvironmentName();
-                Response.Write(string.Format("ContextConfig.DomainEnvironmentName() = {0} <br/>", E));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string H = ContextConfig.DomainEnvironmentName("xyz.com");
-                Response.Write(string.Format("ContextConfig.DomainEnvironmentName(\"xyz.com\") = {0} <br/>", H));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            Response.Write("<br/>");
-
-            try
-            {
-                string I = ContextConfig.EnvironmentIsConfigured().ToString();
-                Response.Write(string.Format("ContextConfig.EnvironmentIsConfigured() = {0} <br/>", I));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string J = ContextConfig.EnvironmentIsConfigured("testing").ToString();
-                Response.Write(string.Format("ContextConfig.EnvironmentIsConfigured(\"testing\") = {0} <br/>", J));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string K = ContextConfig.EnvironmentIsConfigured("testing", false).ToString();
-                Response.Write(string.Format("ContextConfig.EnvironmentIsConfigured(\"testing\", false) = {0} <br/>", K));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            Response.Write("<br/>");
-
-            try
-            {
-                string C = ContextConfig.GetValue("MyAppKey");
-                Response.Write(string.Format("ContextConfig.GetValue(\"MyAppKey\") = {0} <br/>", C));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string A = ContextConfig.GetValue("MyAppKey", "dev");
-                Response.Write(string.Format("ContextConfig.GetValue(\"MyAppKey\", \"dev\") = {0} <br/>", A));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string L = ContextConfig.GetValue("LiveOnlyAppKey", "live");
-                Response.Write(string.Format("ContextConfig.GetValue(\"LiveOnlyAppKey\", \"live\") = {0} <br/>", L));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string M = ContextConfig.GetValue("LiveOnlyAppKey");
-                Response.Write(string.Format("ContextConfig.GetValue(\"LiveOnlyAppKey\") = {0} <br/>", M));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-            try
-            {
-                string N = ContextConfig.GetValue("KeyThatDoesntExist");
-                Response.Write(string.Format("ContextConfig.GetValue(\"KeyThatDoesntExist\") = {0} <br/>", N));
-            }
-            catch (Exception e)
-            {
-                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", e.GetType().ToString(), e.Message));
-            }
-
-        }
-
         private void WriteData()
         {
             string Version = ConfigSettings.Settings.Version;
@@ -181,7 +32,7 @@ namespace TestSite
             int d = 0;
             foreach (DomainElement Domain in ConfigSettings.Settings.Domains)
             {
-                Response.Write(string.Format("Domain {0} : {1} = {2} <br/>", d, Domain.Url, Domain.Environment));
+                Response.Write(string.Format("Domain {0} : {1} = {2} ({3}) <br/>", d, Domain.Url, Domain.Environment, Domain.SiteName));
                 d++;
             }
             Response.Write("<br/>");
@@ -207,6 +58,178 @@ namespace TestSite
                 Response.Write("</ul>");
             }
             Response.Write("<br/>");
+
+        }
+
+        private void LookupStuff()
+        {
+            try
+            {
+                string B = ContextConfig.CurrentDomain;
+                Response.Write(string.Format("ContextConfig.CurrentDomain = {0} <br/>", B));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string D = ContextConfig.DomainIsConfigured().ToString();
+                Response.Write(string.Format("ContextConfig.DomainIsConfigured() = {0} <br/>", D));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+
+                string F = ContextConfig.DomainIsConfigured("xyz.com").ToString();
+                Response.Write(string.Format("ContextConfig.DomainIsConfigured(\"xyz.com\") = {0} <br/>", F));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string G = ContextConfig.DomainIsConfigured("xyz.com", false).ToString();
+                Response.Write(string.Format("ContextConfig.DomainIsConfigured(\"xyz.com\", false) = {0} <br/>", G));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string E = ContextConfig.DomainEnvironmentName();
+                Response.Write(string.Format("ContextConfig.DomainEnvironmentName() = {0} <br/>", E));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string H = ContextConfig.DomainEnvironmentName("xyz.com");
+                Response.Write(string.Format("ContextConfig.DomainEnvironmentName(\"xyz.com\") = {0} <br/>", H));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            Response.Write("<br/>");
+
+            try
+            {
+                string E = ContextConfig.DomainSiteName();
+                Response.Write(string.Format("ContextConfig.DomainSiteName() = {0} <br/>", E));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string H = ContextConfig.DomainSiteName("xyz.com");
+                Response.Write(string.Format("ContextConfig.DomainSiteName(\"xyz.com\") = {0} <br/>", H));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            Response.Write("<br/>");
+
+            try
+            {
+                string I = ContextConfig.EnvironmentIsConfigured().ToString();
+                Response.Write(string.Format("ContextConfig.EnvironmentIsConfigured() = {0} <br/>", I));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string J = ContextConfig.EnvironmentIsConfigured("testing").ToString();
+                Response.Write(string.Format("ContextConfig.EnvironmentIsConfigured(\"testing\") = {0} <br/>", J));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string K = ContextConfig.EnvironmentIsConfigured("testing", false).ToString();
+                Response.Write(string.Format("ContextConfig.EnvironmentIsConfigured(\"testing\", false) = {0} <br/>", K));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            Response.Write("<br/>");
+
+            try
+            {
+                string C = ContextConfig.GetValue("MyAppKey");
+                Response.Write(string.Format("ContextConfig.GetValue(\"MyAppKey\") = {0} <br/>", C));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string A = ContextConfig.GetValue("MyAppKey", "dev");
+                Response.Write(string.Format("ContextConfig.GetValue(\"MyAppKey\", \"dev\") = {0} <br/>", A));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string L = ContextConfig.GetValue("LiveOnlyAppKey", "live");
+                Response.Write(string.Format("ContextConfig.GetValue(\"LiveOnlyAppKey\", \"live\") = {0} <br/>", L));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string M = ContextConfig.GetValue("LiveOnlyAppKey");
+                Response.Write(string.Format("ContextConfig.GetValue(\"LiveOnlyAppKey\") = {0} <br/>", M));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
+                string N = ContextConfig.GetValue("KeyThatDoesntExist");
+                Response.Write("Here we throw an error intentionally:");
+                Response.Write(string.Format("ContextConfig.GetValue(\"KeyThatDoesntExist\") = {0} <br/>", N));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
 
         }
     }

@@ -21,9 +21,13 @@ namespace HLF.ContextConfig
         private static string _configfile = "ContextConfig.config";
         private static ConfigSettings _Config;
         private static Configuration config;
+
+        /// <summary>
+        /// Represents all the ConfigSettings
+        /// </summary>
         public static ConfigSettings Settings = GetSettings();
 
-        public static ConfigSettings GetSettings()
+        internal static ConfigSettings GetSettings()
         {
             ExeConfigurationFileMap fileMap = new ExeConfigurationFileMap();
             fileMap.ExeConfigFilename = HttpContext.Current.Server.MapPath(string.Format("~/config/{0}", _configfile));
@@ -62,21 +66,27 @@ namespace HLF.ContextConfig
 
         #region *** ConfigurationProperties ***
 
-        //<ContextConfig> 'version' attribute
+        /// <summary>
+        /// &lt;ContextConfig&gt; 'version' attribute
+        /// </summary>
         [ConfigurationProperty("version")]
         public string Version
         {
             get { return (string) base["version"]; }
         }
 
-        //<ContextConfig> <Domains> collection
+        /// <summary>
+        /// &lt;ContextConfig&gt; &lt;Domains&gt; collection
+        /// </summary>
         [ConfigurationProperty("Domains")]
         public DomainElementCollection Domains
         {
             get { return (DomainElementCollection) base["Domains"]; }
         }
 
-        //<ContextConfig> <Environments> collection
+        /// <summary>
+        /// &lt;ContextConfig&gt; &lt;Environments&gt; collection
+        /// </summary>
         [ConfigurationProperty("Environments")]
         public EnvironmentElementCollection Environments
         {
@@ -89,33 +99,58 @@ namespace HLF.ContextConfig
 
     #region *** Element Objects ***
 
+    /// <summary>
+    /// Represents a Domain from the config file
+    /// </summary>
     public class DomainElement : ConfigurationElement
     {
-        //<Domain> 'url' attribute
+        /// <summary>
+        /// &lt;Domain&gt; 'url' attribute
+        /// </summary>
         [ConfigurationProperty("url", IsRequired = true)]
         public string Url
         {
             get { return (string) base["url"]; }
         }
 
-        //<Domain> 'environment' attribute
+        /// <summary>
+        /// &lt;Domain&gt; 'environment' attribute
+        /// </summary>
         [ConfigurationProperty("environment", IsRequired = true)]
         public string Environment
         {
             get { return (string) base["environment"]; }
         }
+
+        /// <summary>
+        /// &lt;Domain&gt; 'sitename' attribute
+        /// </summary>
+        [ConfigurationProperty("sitename", IsRequired = false)]
+        public string SiteName
+        {
+            get { return (string)base["sitename"]; }
+        }
     }
 
+    /// <summary>
+    /// Represents a defined Environment from the config file
+    /// </summary>
     public class EnvironmentElement : ConfigurationElement
     {
-        //<Environment> 'name' attribute
+      
+        /// <summary>
+        /// &lt;Environment&gt; 'name' attribute
+        /// </summary>
         [ConfigurationProperty("name", IsRequired = true)]
         public string Name
         {
             get { return (string) base["name"]; }
         }
 
-        //<Environment> <Configs> (key/values) collection
+
+        /// <summary>
+        /// &lt;Environment&gt; &lt;Configs&gt; (key/values) collection
+        /// </summary>
         [ConfigurationProperty("Configs")]
         public KeyValueElementCollection Configs
         {
@@ -124,16 +159,24 @@ namespace HLF.ContextConfig
 
     }
 
+    /// <summary>
+    /// Represents a Key/Value pair defined for an environment in the config file
+    /// </summary>
     public class KeyValueElement : ConfigurationElement
     {
-        //<Environment> <add> 'key' attribute
+        
+        /// <summary>
+        /// &lt;Environment&gt; &lt;add&gt; 'key' attribute
+        /// </summary>
         [ConfigurationProperty("key", IsRequired = true)]
         public string Key
         {
             get { return (string) base["key"]; }
         }
-
-        //<Environment> <add> 'value' attribute
+        
+        /// <summary>
+        /// &lt;Environment&gt; &lt;add&gt;'value' attribute
+        /// </summary>
         [ConfigurationProperty("value", IsRequired = false)]
         public string Value
         {
@@ -145,26 +188,51 @@ namespace HLF.ContextConfig
 
     #region *** Element Collections ***
 
+    /// <summary>
+    /// Represents all the Domains defined in the config file
+    /// </summary>
     [ConfigurationCollection(typeof (DomainElement), AddItemName = "Domain",
         CollectionType = ConfigurationElementCollectionType.BasicMap)]
     public class DomainElementCollection : ConfigurationElementCollection
     {
+        /// <summary>
+        /// Gets the name used to identify this collection of elements in the configuration file when overridden in a derived class.
+        /// </summary>
+        /// <returns>
+        /// The name of the collection; otherwise, an empty string. The default is an empty string.
+        /// </returns>
         protected override string ElementName
         {
             get { return "Domain"; }
         }
 
         //Basic Stuff
-        public ConfigurationElementCollectionType CollectionType
+        /// <summary>
+        /// Gets the type of the <see cref="T:System.Configuration.ConfigurationElementCollection"/>.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="T:System.Configuration.ConfigurationElementCollectionType"/> of this collection.
+        /// </returns>
+        public override ConfigurationElementCollectionType CollectionType
         {
             get { return ConfigurationElementCollectionType.BasicMap; }
         }
 
+        /// <summary>
+        /// When overridden in a derived class, creates a new <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </returns>
         protected override ConfigurationElement CreateNewElement()
         {
             return new DomainElement();
         }
 
+        /// <summary>
+        /// Integer index
+        /// </summary>
+        /// <param name="index"></param>
         public DomainElement this[int index]
         {
             get { return (DomainElement) base.BaseGet(index); }
@@ -179,37 +247,73 @@ namespace HLF.ContextConfig
         }
 
         //Custom Key
+        /// <summary>
+        /// Gets the element key for a specified configuration element when overridden in a derived class.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Object"/> that acts as the key for the specified <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </returns>
+        /// <param name="element">The <see cref="T:System.Configuration.ConfigurationElement"/> to return the key for. </param>
         protected override object GetElementKey(ConfigurationElement element)
         {
             return (element as DomainElement).Url;
         }
 
-        public DomainElement this[string url]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="url"></param>
+        public new DomainElement this[string url]
         {
             get { return (DomainElement) base.BaseGet(url); }
         }
     }
 
+    /// <summary>
+    /// Represents all the Environments defined in the config file
+    /// </summary>
     [ConfigurationCollection(typeof (EnvironmentElement), AddItemName = "Environment",
         CollectionType = ConfigurationElementCollectionType.BasicMap)]
     public class EnvironmentElementCollection : ConfigurationElementCollection
     {
+        /// <summary>
+        /// Gets the name used to identify this collection of elements in the configuration file when overridden in a derived class.
+        /// </summary>
+        /// <returns>
+        /// The name of the collection; otherwise, an empty string. The default is an empty string.
+        /// </returns>
         protected override string ElementName
         {
             get { return "Environment"; }
         }
 
         //Basic Stuff
-        public ConfigurationElementCollectionType CollectionType
+        /// <summary>
+        /// Gets the type of the <see cref="T:System.Configuration.ConfigurationElementCollection"/>.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="T:System.Configuration.ConfigurationElementCollectionType"/> of this collection.
+        /// </returns>
+        public override ConfigurationElementCollectionType CollectionType
         {
             get { return ConfigurationElementCollectionType.BasicMap; }
         }
 
+        /// <summary>
+        /// When overridden in a derived class, creates a new <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </returns>
         protected override ConfigurationElement CreateNewElement()
         {
             return new EnvironmentElement();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
         public EnvironmentElement this[int index]
         {
             get { return (EnvironmentElement) base.BaseGet(index); }
@@ -224,37 +328,73 @@ namespace HLF.ContextConfig
         }
 
         //Custom Key
+        /// <summary>
+        /// Gets the element key for a specified configuration element when overridden in a derived class.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Object"/> that acts as the key for the specified <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </returns>
+        /// <param name="element">The <see cref="T:System.Configuration.ConfigurationElement"/> to return the key for. </param>
         protected override object GetElementKey(ConfigurationElement element)
         {
             return (element as EnvironmentElement).Name;
         }
 
-        public EnvironmentElement this[string name]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        public new EnvironmentElement this[string name]
         {
             get { return (EnvironmentElement) base.BaseGet(name); }
         }
     }
 
+    /// <summary>
+    /// Represents all the Key/Value pair elements defined in the config file
+    /// </summary>
     [ConfigurationCollection(typeof (KeyValueElement), AddItemName = "add",
         CollectionType = ConfigurationElementCollectionType.BasicMap)]
     public class KeyValueElementCollection : ConfigurationElementCollection
     {
+        /// <summary>
+        /// Gets the name used to identify this collection of elements in the configuration file when overridden in a derived class.
+        /// </summary>
+        /// <returns>
+        /// The name of the collection; otherwise, an empty string. The default is an empty string.
+        /// </returns>
         protected override string ElementName
         {
             get { return "add"; }
         }
 
         //Basic Stuff
-        public ConfigurationElementCollectionType CollectionType
+        /// <summary>
+        /// Gets the type of the <see cref="T:System.Configuration.ConfigurationElementCollection"/>.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="T:System.Configuration.ConfigurationElementCollectionType"/> of this collection.
+        /// </returns>
+        public override ConfigurationElementCollectionType CollectionType
         {
             get { return ConfigurationElementCollectionType.BasicMap; }
         }
 
+        /// <summary>
+        /// When overridden in a derived class, creates a new <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </returns>
         protected override ConfigurationElement CreateNewElement()
         {
             return new KeyValueElement();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
         public KeyValueElement this[int index]
         {
             get { return (KeyValueElement) base.BaseGet(index); }
@@ -269,12 +409,23 @@ namespace HLF.ContextConfig
         }
 
         //Custom Key
+        /// <summary>
+        /// Gets the element key for a specified configuration element when overridden in a derived class.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="T:System.Object"/> that acts as the key for the specified <see cref="T:System.Configuration.ConfigurationElement"/>.
+        /// </returns>
+        /// <param name="element">The <see cref="T:System.Configuration.ConfigurationElement"/> to return the key for. </param>
         protected override object GetElementKey(ConfigurationElement element)
         {
             return (element as KeyValueElement).Key;
         }
 
-        public KeyValueElement this[string key]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        public new KeyValueElement this[string key]
         {
             get { return (KeyValueElement) base.BaseGet(key); }
         }
