@@ -16,10 +16,10 @@ This C# library allows you to set configuration values dependent upon which web 
 ## Installation & Usage ##
 
 ###ASP.Net Website###
-The code can be used in any ASP.Net website by copying the files from 'Releases\Basic Compiled\Version X' to your site, customizing the example .config file, and referencing "HLF.ContextConfig" in your code.
+The code can be used in any ASP.Net website by copying the files from 'Releases\Version X' to your site, customizing the example .config file, and referencing "HLF.ContextConfig" in your code.
 
 ###Umbraco CMS Website###
-*An Umbraco package is available at http://our.umbraco.org/projects/developer-tools/contextconfig
+An Umbraco package is available at http://our.umbraco.org/projects/developer-tools/contextconfig
 
 ## Created by ##
 Heather Floyd
