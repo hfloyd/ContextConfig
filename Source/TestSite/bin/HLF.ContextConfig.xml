@@ -4,6 +4,11 @@
         <name>HLF.ContextConfig</name>
     </assembly>
     <members>
+        <member name="M:HLF.ContextConfig.ContextConfigOverride.ActivateOverride">
+            <summary>
+            A call to this should be placed somewhere before config values are called, for instance, in App Start, etc.
+            </summary>
+        </member>
         <member name="T:HLF.ContextConfig.ConfigSettings">
             <summary>
             The 'ConfigSettings' class give you direct access to all the configured data using collections and dot(.) notation.

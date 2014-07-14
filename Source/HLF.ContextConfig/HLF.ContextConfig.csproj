@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContextConfigOverride.cs" />
     <Compile Include="ConfigSettings.cs" />
     <Compile Include="ContextConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -328,6 +328,40 @@ namespace HLF.ContextConfig
             return ReturnValue;
         }
 
+        
+
+        public static List<KeyValueElement> AllEnvironmentConfigs(bool IncludeDefaults = true)
+        {
+            return AllEnvironmentConfigs(DomainEnvironmentName(), IncludeDefaults);
+        }
+
+        public static List<KeyValueElement> AllEnvironmentConfigs(string EnvironmentName, bool IncludeDefaults = true)
+        {
+            List<KeyValueElement> ReturnList = new List<KeyValueElement>();
+
+            EnvironmentElement Env = ConfigSettings.Settings.Environments[EnvironmentName];
+            KeyValueElementCollection KvColl = Env.Configs;
+
+            foreach (KeyValueElement KeyValue in Env.Configs)
+            {
+                ReturnList.Add(KeyValue);
+            }
+
+            if (IncludeDefaults)
+            {
+                EnvironmentElement EnvDefault = ConfigSettings.Settings.Environments["default"];
+
+                foreach (KeyValueElement KeyValueDef in EnvDefault.Configs)
+                {
+                    if (KvColl[KeyValueDef.Key]==null)
+                    {
+                        ReturnList.Add(KeyValueDef);
+                    }
+                }
+            }
+
+            return ReturnList;
+        }
 
         #endregion
 
@@ -389,3 +423,7 @@ namespace HLF.ContextConfig
     #endregion
 
 }
+
+//TODO: Update documentation with Override stuff
+//TODO: Create new release w. Override stuff
+//TODO: Create app startup code to activate based on additional config value

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Configuration;
+using System.Configuration.Internal;
+using System.Reflection;
 using HLF.ContextConfig;
 
 namespace TestSite
@@ -17,6 +20,11 @@ namespace TestSite
             Response.Write("<h3>Testing Functions</h3>");
             Response.Write("<p><b>(Using the 'ContextConfig' class)</b></p>");
             LookupStuff();
+            Response.Write("<hr/>");
+
+            Response.Write("<h3>Testing Web.config Override</h3>");
+            Response.Write("<p><b>(Using the 'ContextConfigOverride' class)</b></p>");
+            TestConfigOverride();
             Response.Write("<hr/>");
         }
 
@@ -160,6 +168,16 @@ namespace TestSite
 
             try
             {
+                string I = ContextConfig.DomainEnvironmentName().ToString();
+                Response.Write(string.Format("ContextConfig.DomainEnvironmentName() = {0} <br/>", I));
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
+
+            try
+            {
                 string J = ContextConfig.EnvironmentIsConfigured("testing").ToString();
                 Response.Write(string.Format("ContextConfig.EnvironmentIsConfigured(\"testing\") = {0} <br/>", J));
             }
@@ -231,6 +249,17 @@ namespace TestSite
                 Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
             }
 
+        }
+
+        private void TestConfigOverride()
+        {
+            HLF.ContextConfig.ContextConfigOverride.ActivateOverride();
+
+            // test it
+            string Test = ConfigurationManager.AppSettings["OverrideTest"];
+            Response.Write(string.Format("OverrideTest = {0} <br/>", Test));
+
+            //Console.WriteLine( == "Hello world" ? "Success!" : "Failure!");
         }
     }
 }
