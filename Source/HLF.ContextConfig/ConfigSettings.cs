@@ -72,7 +72,21 @@ namespace HLF.ContextConfig
         [ConfigurationProperty("version")]
         public string Version
         {
-            get { return (string) base["version"]; }
+            get { return (string)base["version"]; }
+        }
+
+        /// <summary>
+        /// &lt;ContextConfig&gt; 'OverrideConfigurationManager' attribute
+        /// </summary>
+        [ConfigurationProperty("OverrideConfigurationManager")]
+        public bool OverrideConfigurationManager
+        {
+            get
+            {
+                //string ConfigValue = (string)base["OverrideConfigurationManager"];
+                //return Convert.ToBoolean(ConfigValue);
+                return (bool)base["OverrideConfigurationManager"];
+            }
         }
 
         /// <summary>

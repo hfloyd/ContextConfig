@@ -4,9 +4,34 @@
         <name>HLF.ContextConfig</name>
     </assembly>
     <members>
+        <member name="T:HLF.ContextConfig.ContextConfigOverride">
+            <summary>
+            Handles overriding standard 'ConfigurationManager.AppSettings["key"]' operations
+            </summary>
+        </member>
         <member name="M:HLF.ContextConfig.ContextConfigOverride.ActivateOverride">
             <summary>
-            A call to this should be placed somewhere before config values are called, for instance, in App Start, etc.
+            Re-initializes the ConfigurationManager to utilize ContextConfig values when calling 'ConfigurationManager.AppSettings["key"]'
+            A call to this should be placed somewhere before config values are called, for instance, in App Start.
+            Or use the 'ContextConfigOverrideModule' HttpModule for default handling
+            **Will activate the override based on the value in ContextConfig.config**
+            </summary>
+        </member>
+        <member name="M:HLF.ContextConfig.ContextConfigOverride.ActivateOverride(System.Boolean)">
+            <summary>
+            Re-initializes the ConfigurationManager to utilize ContextConfig values when calling 'ConfigurationManager.AppSettings["key"]'
+            A call to this should be placed somewhere before config values are called, for instance, in App Start.
+            Or use the 'ContextConfigOverrideModule' HttpModule for default handling
+            </summary>
+            <param name="DoOverride">Should the override be activated? (False=no code will run)</param>
+        </member>
+        <member name="T:HLF.ContextConfig.ContextConfigOverrideModule">
+            <summary>
+            HttpModule to run 'ContextConfigOverride.ActivateOverride()'
+            Register in Web.config file:
+            &gt;add name="ContextConfigOverrideModule" type="HLF.ContextConfig.ContextConfigOverrideModule, HLF.ContextConfig" /&lt;
+            IIS6 or Classic Mode - place in  &gt;system.web&lt;&gt;httpModules&lt; section
+            IIS7+ or Integrated Mode - place in &gt;system.webServer&lt;&gt;modules&lt; section
             </summary>
         </member>
         <member name="T:HLF.ContextConfig.ConfigSettings">
@@ -26,6 +51,11 @@
         <member name="P:HLF.ContextConfig.ConfigSettings.Version">
             <summary>
             &lt;ContextConfig&gt; 'version' attribute
+            </summary>
+        </member>
+        <member name="P:HLF.ContextConfig.ConfigSettings.OverrideConfigurationManager">
+            <summary>
+            &lt;ContextConfig&gt; 'OverrideConfigurationManager' attribute
             </summary>
         </member>
         <member name="P:HLF.ContextConfig.ConfigSettings.Domains">

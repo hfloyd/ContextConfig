@@ -8,12 +8,16 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Configuration.Internal;
 using System.Reflection;
+using System.Web;
 
 namespace HLF.ContextConfig
 {
+    /// <summary>
+    /// Handles overriding standard 'ConfigurationManager.AppSettings["key"]' operations
+    /// </summary>
     public static class ContextConfigOverride
     {
-        sealed class ConfigProxy:IInternalConfigSystem
+        sealed internal class ConfigProxy:IInternalConfigSystem
         {
             readonly IInternalConfigSystem _Baseconf;
 
@@ -58,20 +62,42 @@ namespace HLF.ContextConfig
         }
 
         /// <summary>
-        /// A call to this should be placed somewhere before config values are called, for instance, in App Start, etc.
+        /// Re-initializes the ConfigurationManager to utilize ContextConfig values when calling 'ConfigurationManager.AppSettings["key"]'
+        /// A call to this should be placed somewhere before config values are called, for instance, in App Start.
+        /// Or use the 'ContextConfigOverrideModule' HttpModule for default handling
+        /// **Will activate the override based on the value in ContextConfig.config**
         /// </summary>
         public static void ActivateOverride()
         {
-            ClearConfigCache();
+            //Get value from config
+            bool DoOverride = ConfigSettings.Settings.OverrideConfigurationManager;
 
-            // initialize the ConfigurationManager
-            object o = ConfigurationManager.AppSettings;
-
-            // hack your proxy IInternalConfigSystem into the ConfigurationManager
-            FieldInfo s_configSystem = typeof(ConfigurationManager).GetField("s_configSystem", BindingFlags.Static | BindingFlags.NonPublic);
-            s_configSystem.SetValue(null, new ConfigProxy((IInternalConfigSystem)s_configSystem.GetValue(null)));
+            //call using config value
+            ActivateOverride(DoOverride);
         }
 
+        /// <summary>
+        /// Re-initializes the ConfigurationManager to utilize ContextConfig values when calling 'ConfigurationManager.AppSettings["key"]'
+        /// A call to this should be placed somewhere before config values are called, for instance, in App Start.
+        /// Or use the 'ContextConfigOverrideModule' HttpModule for default handling
+        /// </summary>
+        /// <param name="DoOverride">Should the override be activated? (False=no code will run)</param>
+        public static void ActivateOverride(bool DoOverride)
+        {
+            ClearConfigCache();
+
+            if (DoOverride)
+            {
+                // initialize the ConfigurationManager
+                object o = ConfigurationManager.AppSettings;
+
+                // hack your proxy IInternalConfigSystem into the ConfigurationManager
+                FieldInfo s_configSystem = typeof (ConfigurationManager).GetField("s_configSystem",
+                                                                                  BindingFlags.Static |
+                                                                                  BindingFlags.NonPublic);
+                s_configSystem.SetValue(null, new ConfigProxy((IInternalConfigSystem) s_configSystem.GetValue(null)));
+            }
+        }
 
         private static void ClearConfigCache()
         {
@@ -100,5 +126,30 @@ namespace HLF.ContextConfig
                 fiSystem.SetValue(null, null);
             }
         }
+    }
+
+    /// <summary>
+    /// HttpModule to run 'ContextConfigOverride.ActivateOverride()'
+    /// Register in Web.config file:
+    /// &lt;add name="ContextConfigOverrideModule" type="HLF.ContextConfig.ContextConfigOverrideModule, HLF.ContextConfig" /&gt;
+    /// IIS6 or Classic Mode - place in  &lt;system.web&gt;&lt;httpModules&gt; section
+    /// IIS7+ or Integrated Mode - place in &lt;system.webServer&gt;&lt;modules&gt; section
+    /// </summary>
+    public class ContextConfigOverrideModule : IHttpModule
+    {
+        /// <summary>
+        /// Runs 'ActivateOverride()' on App Start
+        /// </summary>
+        /// <param name="context"></param>
+        public void Init(HttpApplication context)
+        {
+            ContextConfigOverride.ActivateOverride();
+        }
+
+        public void Dispose()
+        {
+
+        }
+
     }
 }

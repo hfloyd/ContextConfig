@@ -253,13 +253,16 @@ namespace TestSite
 
         private void TestConfigOverride()
         {
-            HLF.ContextConfig.ContextConfigOverride.ActivateOverride();
+            Response.Write(string.Format("'OverrideConfigurationManager' value in config = {0} <br/>", ConfigSettings.Settings.OverrideConfigurationManager));
 
             // test it
             string Test = ConfigurationManager.AppSettings["OverrideTest"];
             Response.Write(string.Format("OverrideTest = {0} <br/>", Test));
 
-            //Console.WriteLine( == "Hello world" ? "Success!" : "Failure!");
+            // test missing value
+            string TestNull = ConfigurationManager.AppSettings["NoKey"];
+            Response.Write(string.Format("Missing Key = {0} <br/>", TestNull));
+
         }
     }
 }

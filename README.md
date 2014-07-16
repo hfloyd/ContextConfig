@@ -1,6 +1,6 @@
 # Context Config C# Library#
 
-This C# library allows you to set configuration values dependent upon which web server environment the code is currently running. Environments are defined using the hostname (url) from which the page is operating using a basic XML config file. Multiple hostnames can be set for each environment. You can also add an optional "catch-all" wildcard domain indicating which environment should be assumed if the current domain doesn't match any that have been predefined.
+This C# library allows you to set configuration values dependent upon which web server environment the code is currently running. Environments are defined using the hostname (url) from which the page is operating using a basic XML config file. Multiple hostnames can be set for each environment. You can also add an optional "catch-all" wildcard domain indicating which environment should be assumed if the current domain doesn't match any that have been predefined. There is also an option to override the operation of ConfigurationManager.AppSettings["key"] to use ContextConfig values, if present.
 
 *Compiled against .Net v. 4.5*
 
@@ -28,3 +28,7 @@ Heather Floyd
 
 ### Acknowledgements ###
 Thank you,  Mike Barlow, for a fantastic, clean way of dealing with xml config files:  [KickStart – C# Custom Configuration](http://bardevblog.wordpress.com/2013/11/17/kickstart-c-custom-configuration/)
+
+I have also adapted code from:
+* [ConfigOverrideTest](https://gist.github.com/myaumyau/4975059/)
+* [Override-Configuration-Manager](http://www.codeproject.com/Articles/69364/Override-Configuration-Manager)

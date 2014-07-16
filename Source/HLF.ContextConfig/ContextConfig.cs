@@ -329,12 +329,22 @@ namespace HLF.ContextConfig
         }
 
         
-
+        /// <summary>
+        /// Get all the KeyValue elements for the current Environment
+        /// </summary>
+        /// <param name="IncludeDefaults">Include all ‘default’ KeyValue configs for keys not specifically defined for the environment.</param>
+        /// <returns></returns>
         public static List<KeyValueElement> AllEnvironmentConfigs(bool IncludeDefaults = true)
         {
             return AllEnvironmentConfigs(DomainEnvironmentName(), IncludeDefaults);
         }
 
+        /// <summary>
+        /// Get all the KeyValue elements for the current Environment
+        /// </summary>
+        /// <param name="EnvironmentName">Environment to get values from</param>
+        /// <param name="IncludeDefaults">Include all ‘default’ KeyValue configs for keys not specifically defined for the environment.</param>
+        /// <returns></returns>
         public static List<KeyValueElement> AllEnvironmentConfigs(string EnvironmentName, bool IncludeDefaults = true)
         {
             List<KeyValueElement> ReturnList = new List<KeyValueElement>();
@@ -424,6 +434,3 @@ namespace HLF.ContextConfig
 
 }
 
-//TODO: Update documentation with Override stuff
-//TODO: Create new release w. Override stuff
-//TODO: Create app startup code to activate based on additional config value
