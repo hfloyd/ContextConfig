@@ -161,7 +161,6 @@ namespace HLF.ContextConfig
             get { return (string) base["name"]; }
         }
 
-
         /// <summary>
         /// &lt;Environment&gt; &lt;Configs&gt; (key/values) collection
         /// </summary>
@@ -171,6 +170,14 @@ namespace HLF.ContextConfig
             get { return (KeyValueElementCollection) base["Configs"]; }
         }
 
+        /// <summary>
+        /// &lt;Environment&gt; &lt;SmtpSettings&gt; element
+        /// </summary>
+        [ConfigurationProperty("SmtpSettings", IsRequired=false)]
+        public SmtpSettingsElement SmtpSettings
+        {
+            get { return (SmtpSettingsElement)base["SmtpSettings"]; }
+        }
     }
 
     /// <summary>
@@ -198,6 +205,307 @@ namespace HLF.ContextConfig
         }
     }
 
+    public abstract class SmtpConfigurationElement : ConfigurationElement
+    {
+        System.Net.Mail.SmtpClient _smtpDefaults;
+
+        /// <summary>
+        /// Returns an smtp client object. Helper object used to return default smtp config values in case they are
+        /// not provided in this section.
+        /// </summary>
+        protected System.Net.Mail.SmtpClient SmtpDefaults
+        {
+            get
+            {
+                if (_smtpDefaults == null)
+                    _smtpDefaults = new System.Net.Mail.SmtpClient();
+                return _smtpDefaults;
+            }
+        }
+
+        /// <summary>
+        /// Checks whether a specific configuration property was provided or was absent from the configuration element
+        /// </summary>
+        /// <param name="PropertyName">Name of the property to check on</param>
+        /// <returns></returns>
+        internal bool IsPropertyUndefined(string PropertyName)
+        {
+            var property = this.ElementInformation.Properties[PropertyName];
+
+            return property == null || property.ValueOrigin == PropertyValueOrigin.Default;
+        }
+    }
+
+    /// <summary>
+    /// Represents the SmtpSettings defined for an environment in the config file
+    /// </summary>
+    public class SmtpSettingsElement : SmtpConfigurationElement
+    {
+        #region const
+        internal const string DeliveryMethodPropertyName = "deliveryMethod";
+        #endregion
+
+
+        /// <summary>
+        /// &lt;SmtpSettings&gt; 'deliveryMethod' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty(DeliveryMethodPropertyName, IsRequired = false)]
+        public System.Net.Mail.SmtpDeliveryMethod DeliveryMethod
+        {
+            get
+            {
+                if (IsPropertyUndefined(DeliveryMethodPropertyName))
+                    return SmtpDefaults.DeliveryMethod;  // return default value
+
+                return (System.Net.Mail.SmtpDeliveryMethod)base[DeliveryMethodPropertyName];
+            }
+        }
+
+        /// <summary>
+        /// &lt;SmtpSettings&gt; 'deliveryFormat' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("deliveryFormat", IsRequired = false)]
+        public System.Net.Mail.SmtpDeliveryFormat DeliveryFormat
+        {
+            get
+            {
+                if (IsPropertyUndefined("deliveryFormat"))
+                    return SmtpDefaults.DeliveryFormat; // return default value
+
+                return (System.Net.Mail.SmtpDeliveryFormat)base["deliveryFormat"];
+            }
+        }
+
+        /// <summary>
+        /// &lt;SmtpSettings&gt; 'from' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("from", IsRequired = false)]
+        public string From
+        {
+            get
+            {
+                if (IsPropertyUndefined("from"))
+                {
+                    // return default value, if provided
+                    var defaultFrom = new System.Net.Mail.MailMessage().From;
+                    if (defaultFrom != null)
+                        return defaultFrom.Address; // we have a default from address
+                }
+
+                return (string)base["from"];
+            }
+        }
+
+        /// <summary>
+        /// &lt;SmtpSettings&gt; 'network' element.
+        /// Defaults to the base smtp network settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("network", IsRequired = false)]
+        public SmtpNetworkElement Network
+        {
+            get
+            {
+                return (SmtpNetworkElement)base["network"];
+            }
+            set
+            {
+                this["network"] = value; 
+            }
+        }
+
+        /// <summary>
+        /// &lt;SmtpSettings&gt; 'specifiedPickupDirectory' element.
+        /// Defaults to the base smtp specifiedPickupDirectory settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("specifiedPickupDirectory", IsRequired = false)]
+        public SmtpSpecifiedPickupDirectoryElement SpecifiedPickupDirectory
+        {
+            get { return (SmtpSpecifiedPickupDirectoryElement)base["specifiedPickupDirectory"]; }
+        }
+    }
+
+    /// <summary>
+    /// Represents the Network configuration for SmtpSettings defined for an environment in the config file
+    /// </summary>
+    public class SmtpNetworkElement : SmtpConfigurationElement
+    {
+        /// <summary>
+        /// &lt;Network&gt; 'clientDomain' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("clientDomain", IsRequired = false)]
+        public string ClientDomain
+        {
+            get
+            {
+                if (UseDefaultCredentials)
+                    return string.Empty;
+                
+                if (IsPropertyUndefined("clientDomain"))
+                {
+                    var defaultCredentials = (System.Net.NetworkCredential)SmtpDefaults.Credentials;
+
+                    if (defaultCredentials != null)
+                        return defaultCredentials.Domain;
+                }
+                
+                return (string)base["clientDomain"];
+            }
+        }
+
+        /// <summary>
+        /// &lt;Network&gt; 'userName' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("userName", IsRequired = false)]
+        public string UserName
+        {
+            get
+            {
+                if (UseDefaultCredentials)
+                    return string.Empty;
+                
+                if (IsPropertyUndefined("userName"))
+                {
+                    var defaultCredentials = (System.Net.NetworkCredential)SmtpDefaults.Credentials;
+
+                    if (defaultCredentials != null)
+                        return defaultCredentials.UserName;
+                }
+
+                return (string)base["userName"];
+            }
+        }
+
+        /// <summary>
+        /// &lt;Network&gt; 'password' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("password", IsRequired = false)]
+        public string Password
+        {
+            get
+            {
+                if (UseDefaultCredentials)
+                    return string.Empty;
+
+                if (IsPropertyUndefined("password"))
+                {
+                    var defaultCredentials = (System.Net.NetworkCredential)SmtpDefaults.Credentials;
+
+                    if (defaultCredentials != null)
+                        return defaultCredentials.Password;
+                }
+                
+                return (string)base["password"];
+            }
+        }
+
+        /// <summary>
+        /// &lt;Network&gt; 'defaultCredentials' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("defaultCredentials", IsRequired = false)]
+        public bool UseDefaultCredentials
+        {
+            get
+            {
+                if (IsPropertyUndefined("defaultCredentials"))
+                    return SmtpDefaults.UseDefaultCredentials;
+                
+                return (bool)base["defaultCredentials"];
+            }
+        }
+
+        /// <summary>
+        /// &lt;Network&gt; 'enableSsl' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("enableSsl", IsRequired = false)]
+        public bool EnableSsl
+        {
+            get
+            {
+                if (IsPropertyUndefined("enableSsl"))
+                    return SmtpDefaults.EnableSsl;
+
+                return (bool)base["enableSsl"];
+            }
+        }
+
+        /// <summary>
+        /// &lt;Network&gt; 'host' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("host", IsRequired = false)]
+        public string Host
+        {
+            get
+            {
+                if (IsPropertyUndefined("host"))
+                    return SmtpDefaults.Host;
+                
+                return (string)base["host"];
+            }
+        }
+
+        /// <summary>
+        /// &lt;Network&gt; 'port' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("port", IsRequired = false)]
+        public int Port
+        {
+            get
+            {
+                if (IsPropertyUndefined("port"))
+                    return SmtpDefaults.Port;
+
+                return (int)base["port"];
+            }
+        }
+
+        /// <summary>
+        /// &lt;Network&gt; 'targetName' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("targetName", IsRequired = false)]
+        public string TargetName
+        {
+            get
+            {
+                if (IsPropertyUndefined("targetName"))
+                    return SmtpDefaults.TargetName;
+
+                return (string)base["targetName"];
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents the SpecifiedPickupDirectory configuration for SmtpSettings defined for an environment in the config file
+    /// </summary>
+    public class SmtpSpecifiedPickupDirectoryElement : SmtpConfigurationElement
+    {
+        /// <summary>
+        /// &lt;SpecifiedPickupDirectory&gt; 'pickupDirectoryLocation' attribute.
+        /// Defaults to the base smtp settings value if not provided in this config section.
+        /// </summary>
+        [ConfigurationProperty("pickupDirectoryLocation", IsRequired = false)]
+        public string PickupDirectoryLocation
+        {
+            get
+            {
+                if (IsPropertyUndefined("pickupDirectoryLocation"))
+                    return SmtpDefaults.PickupDirectoryLocation;
+
+                return (string)base["pickupDirectoryLocation"];
+            }
+        }
+    }
     #endregion
 
     #region *** Element Collections ***

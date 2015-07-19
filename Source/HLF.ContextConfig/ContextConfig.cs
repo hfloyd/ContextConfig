@@ -375,6 +375,54 @@ namespace HLF.ContextConfig
 
         #endregion
 
+        #region SMTP settings
+        /// <summary>
+        /// Get the SMTP Settings for the current domain
+        /// </summary>
+        /// <param name="IncludeDefaults">Include all ‘default’ smtp configs for properties not specifically defined for the current domain.</param>
+        /// <returns></returns>
+        public static SmtpSettingsElement GetSmtpSettings(bool IncludeDefaults = true)
+        {
+            SmtpSettingsElement ReturnValue = null;
+            ReturnValue = GetSmtpSettings(DomainEnvironmentName(), IncludeDefaults);
+
+            return ReturnValue;
+        }
+
+        /// <summary>
+        /// Get the SMTP Settings for a given environment
+        /// </summary>
+        /// <param name="EnvironmentName">Environment to get smtp config from</param>
+        /// <param name="IncludeDefaults">Include all ‘default’ smtp configs for properties not specifically defined for the current domain.</param>
+        /// <returns></returns>
+        public static SmtpSettingsElement GetSmtpSettings(string EnvironmentName, bool IncludeDefaults = true)
+        {
+            SmtpSettingsElement ReturnValue = new SmtpSettingsElement();
+
+            EnvironmentElement Env = ConfigSettings.Settings.Environments[EnvironmentName];
+            EnvironmentElement DefaultEnv = ConfigSettings.Settings.Environments["default"];
+
+            // fills the return value with the values from the requested environment
+            if (Env != null)
+                FillUndefinedSmtpSettings(ReturnValue, Env.SmtpSettings);
+            // fills the still undefined properties of the return value with the values from the default environment
+            if (DefaultEnv != null)
+                FillUndefinedSmtpSettings(ReturnValue, DefaultEnv.SmtpSettings);
+
+            return ReturnValue;
+        }
+
+        /// <summary>
+        /// Performs a property per property fill of undefined properties of an SmtpSettingsElement based on the values of another one
+        /// </summary>
+        /// <param name="Target">The SmtpSettingsElement to fill</param>
+        /// <param name="Source">The SmtpSettingsElement to get values from</param>
+        private static void FillUndefinedSmtpSettings(SmtpSettingsElement Target, SmtpSettingsElement Source)
+        {
+            if (Target.IsPropertyUndefined("defaultCredentials") && !Source.IsPropertyUndefined("defaultCredentials"))
+                Target.Network = Source.Network;
+        }
+        #endregion
     }
 
     #region *** Custom Exceptions ***

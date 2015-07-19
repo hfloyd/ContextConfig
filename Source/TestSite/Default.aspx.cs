@@ -26,6 +26,7 @@ namespace TestSite
             Response.Write("<p><b>(Using the 'ContextConfigOverride' class)</b></p>");
             TestConfigOverride();
             Response.Write("<hr/>");
+
         }
 
         private void WriteData()
@@ -64,9 +65,25 @@ namespace TestSite
                     c++;
                 }
                 Response.Write("</ul>");
+
+                Response.Write("SMTP Settings<ul>");
+                var smtpSettings = Env.SmtpSettings;
+                Response.Write(string.Format("<li> From = {0} </li>", smtpSettings.From));
+                Response.Write(string.Format("<li> Delivery Method = {0} </li>", smtpSettings.DeliveryMethod));
+                Response.Write(string.Format("<li> Delivery Format = {0} </li>", smtpSettings.DeliveryFormat));
+                Response.Write(string.Format("<li> Use Default Credentials = {0} </li>", smtpSettings.Network.UseDefaultCredentials));
+                Response.Write(string.Format("<li> Enable SSL = {0} </li>", smtpSettings.Network.EnableSsl));
+                Response.Write(string.Format("<li> Host = {0} </li>", smtpSettings.Network.Host));
+                Response.Write(string.Format("<li> Port = {0} </li>", smtpSettings.Network.Port));
+                Response.Write(string.Format("<li> Client Domain = {0} </li>", smtpSettings.Network.ClientDomain));
+                Response.Write(string.Format("<li> User Name = {0} </li>", smtpSettings.Network.UserName));
+                Response.Write(string.Format("<li> Password = {0} </li>", smtpSettings.Network.Password));
+                Response.Write(string.Format("<li> Target Name = {0} </li>", smtpSettings.Network.TargetName));
+                Response.Write(string.Format("<li> Pickup Directory Location = {0} </li>", smtpSettings.SpecifiedPickupDirectory.PickupDirectoryLocation));
+                Response.Write("</ul>");
+
             }
             Response.Write("<br/>");
-
         }
 
         private void LookupStuff()
@@ -249,6 +266,30 @@ namespace TestSite
                 Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
             }
 
+            try
+            {
+                SmtpSettingsElement smtpSettings = ContextConfig.GetSmtpSettings();
+
+                Response.Write("SMTP Settings<ul>");
+                Response.Write(string.Format("<li> From = {0} </li>", smtpSettings.From));
+                Response.Write(string.Format("<li> Delivery Method = {0} </li>", smtpSettings.DeliveryMethod));
+                Response.Write(string.Format("<li> Delivery Format = {0} </li>", smtpSettings.DeliveryFormat));
+                Response.Write(string.Format("<li> Use Default Credentials = {0} </li>", smtpSettings.Network.UseDefaultCredentials));
+                Response.Write(string.Format("<li> Enable SSL = {0} </li>", smtpSettings.Network.EnableSsl));
+                Response.Write(string.Format("<li> Host = {0} </li>", smtpSettings.Network.Host));
+                Response.Write(string.Format("<li> Port = {0} </li>", smtpSettings.Network.Port));
+                Response.Write(string.Format("<li> Client Domain = {0} </li>", smtpSettings.Network.ClientDomain));
+                Response.Write(string.Format("<li> User Name = {0} </li>", smtpSettings.Network.UserName));
+                Response.Write(string.Format("<li> Password = {0} </li>", smtpSettings.Network.Password));
+                Response.Write(string.Format("<li> Target Name = {0} </li>", smtpSettings.Network.TargetName));
+                Response.Write(string.Format("<li> Pickup Directory Location = {0} </li>", smtpSettings.SpecifiedPickupDirectory.PickupDirectoryLocation));
+                Response.Write("</ul>");
+
+            }
+            catch (Exception Ex)
+            {
+                Response.Write(string.Format("<span style=\"color:#FF0000;\">ERROR: <b>{0}</b> : {1} </span><br/>", Ex.GetType().ToString(), Ex.Message));
+            }
         }
 
         private void TestConfigOverride()
