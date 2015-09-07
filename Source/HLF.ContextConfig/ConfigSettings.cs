@@ -232,9 +232,9 @@ namespace HLF.ContextConfig
         {
             var property = this.ElementInformation.Properties[PropertyName];
 
-            return property == null || property.ValueOrigin == PropertyValueOrigin.Default;
+            return property == null || property.ValueOrigin != PropertyValueOrigin.SetHere;
         }
-    }
+    } 
 
     /// <summary>
     /// Represents the SmtpSettings defined for an environment in the config file
@@ -242,7 +242,8 @@ namespace HLF.ContextConfig
     public class SmtpSettingsElement : SmtpConfigurationElement
     {
         #region const
-        internal const string DeliveryMethodPropertyName = "deliveryMethod";
+        internal const string DeliveryMethodPropertyName = "deliveryMethod", DeliveryFormatPropertyName = "deliveryFormat", FromPropertyName = "from";
+        protected const string NetworkPropertyName = "network", SpecifiedPickupDirectoryPropertyName = "specifiedPickupDirectory";
         #endregion
 
 
@@ -260,21 +261,29 @@ namespace HLF.ContextConfig
 
                 return (System.Net.Mail.SmtpDeliveryMethod)base[DeliveryMethodPropertyName];
             }
+            set
+            {
+                base[DeliveryMethodPropertyName] = value;
+            }
         }
 
         /// <summary>
         /// &lt;SmtpSettings&gt; 'deliveryFormat' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("deliveryFormat", IsRequired = false)]
+        [ConfigurationProperty(DeliveryFormatPropertyName, IsRequired = false)]
         public System.Net.Mail.SmtpDeliveryFormat DeliveryFormat
         {
             get
             {
-                if (IsPropertyUndefined("deliveryFormat"))
+                if (IsPropertyUndefined(DeliveryFormatPropertyName))
                     return SmtpDefaults.DeliveryFormat; // return default value
 
-                return (System.Net.Mail.SmtpDeliveryFormat)base["deliveryFormat"];
+                return (System.Net.Mail.SmtpDeliveryFormat)base[DeliveryFormatPropertyName];
+            }
+            set
+            {
+                base[DeliveryFormatPropertyName] = value;
             }
         }
 
@@ -282,12 +291,12 @@ namespace HLF.ContextConfig
         /// &lt;SmtpSettings&gt; 'from' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("from", IsRequired = false)]
+        [ConfigurationProperty(FromPropertyName, IsRequired = false)]
         public string From
         {
             get
             {
-                if (IsPropertyUndefined("from"))
+                if (IsPropertyUndefined(FromPropertyName))
                 {
                     // return default value, if provided
                     var defaultFrom = new System.Net.Mail.MailMessage().From;
@@ -295,7 +304,11 @@ namespace HLF.ContextConfig
                         return defaultFrom.Address; // we have a default from address
                 }
 
-                return (string)base["from"];
+                return (string)base[FromPropertyName];
+            }
+            set
+            {
+                base[FromPropertyName] = value;
             }
         }
 
@@ -303,16 +316,12 @@ namespace HLF.ContextConfig
         /// &lt;SmtpSettings&gt; 'network' element.
         /// Defaults to the base smtp network settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("network", IsRequired = false)]
+        [ConfigurationProperty(NetworkPropertyName, IsRequired = false)]
         public SmtpNetworkElement Network
         {
             get
             {
-                return (SmtpNetworkElement)base["network"];
-            }
-            set
-            {
-                this["network"] = value; 
+                return (SmtpNetworkElement)base[NetworkPropertyName];
             }
         }
 
@@ -320,10 +329,10 @@ namespace HLF.ContextConfig
         /// &lt;SmtpSettings&gt; 'specifiedPickupDirectory' element.
         /// Defaults to the base smtp specifiedPickupDirectory settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("specifiedPickupDirectory", IsRequired = false)]
+        [ConfigurationProperty(SpecifiedPickupDirectoryPropertyName, IsRequired = false)]
         public SmtpSpecifiedPickupDirectoryElement SpecifiedPickupDirectory
         {
-            get { return (SmtpSpecifiedPickupDirectoryElement)base["specifiedPickupDirectory"]; }
+            get { return (SmtpSpecifiedPickupDirectoryElement)base[SpecifiedPickupDirectoryPropertyName]; }
         }
     }
 
@@ -332,27 +341,37 @@ namespace HLF.ContextConfig
     /// </summary>
     public class SmtpNetworkElement : SmtpConfigurationElement
     {
+        #region const
+        internal const string ClientDomainPropertyName = "clientDomain", UserNamePropertyName = "userName", PasswordPropertyName = "password",
+                                DefaultCredentialsPropertyName = "defaultCredentials", EnableSslPropertyName = "enableSsl", HostPropertyName = "host",
+                                PortPropertyName = "port", TargetNamePropertyName = "targetName";
+        #endregion
+
         /// <summary>
         /// &lt;Network&gt; 'clientDomain' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("clientDomain", IsRequired = false)]
+        [ConfigurationProperty(ClientDomainPropertyName, IsRequired = false)]
         public string ClientDomain
         {
             get
             {
                 if (UseDefaultCredentials)
                     return string.Empty;
-                
-                if (IsPropertyUndefined("clientDomain"))
+
+                if (IsPropertyUndefined(ClientDomainPropertyName))
                 {
                     var defaultCredentials = (System.Net.NetworkCredential)SmtpDefaults.Credentials;
 
                     if (defaultCredentials != null)
                         return defaultCredentials.Domain;
                 }
-                
-                return (string)base["clientDomain"];
+
+                return (string)base[ClientDomainPropertyName];
+            }
+            set
+            {
+                base[ClientDomainPropertyName] = value;
             }
         }
 
@@ -360,15 +379,15 @@ namespace HLF.ContextConfig
         /// &lt;Network&gt; 'userName' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("userName", IsRequired = false)]
+        [ConfigurationProperty(UserNamePropertyName, IsRequired = false)]
         public string UserName
         {
             get
             {
                 if (UseDefaultCredentials)
                     return string.Empty;
-                
-                if (IsPropertyUndefined("userName"))
+
+                if (IsPropertyUndefined(UserNamePropertyName))
                 {
                     var defaultCredentials = (System.Net.NetworkCredential)SmtpDefaults.Credentials;
 
@@ -376,7 +395,11 @@ namespace HLF.ContextConfig
                         return defaultCredentials.UserName;
                 }
 
-                return (string)base["userName"];
+                return (string)base[UserNamePropertyName];
+            }
+            set
+            {
+                base[UserNamePropertyName] = value;
             }
         }
 
@@ -384,7 +407,7 @@ namespace HLF.ContextConfig
         /// &lt;Network&gt; 'password' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("password", IsRequired = false)]
+        [ConfigurationProperty(PasswordPropertyName, IsRequired = false)]
         public string Password
         {
             get
@@ -392,15 +415,19 @@ namespace HLF.ContextConfig
                 if (UseDefaultCredentials)
                     return string.Empty;
 
-                if (IsPropertyUndefined("password"))
+                if (IsPropertyUndefined(PasswordPropertyName))
                 {
                     var defaultCredentials = (System.Net.NetworkCredential)SmtpDefaults.Credentials;
 
                     if (defaultCredentials != null)
                         return defaultCredentials.Password;
                 }
-                
-                return (string)base["password"];
+
+                return (string)base[PasswordPropertyName];
+            }
+            set
+            {
+                base[PasswordPropertyName] = value;
             }
         }
 
@@ -408,15 +435,19 @@ namespace HLF.ContextConfig
         /// &lt;Network&gt; 'defaultCredentials' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("defaultCredentials", IsRequired = false)]
+        [ConfigurationProperty(DefaultCredentialsPropertyName, IsRequired = false)]
         public bool UseDefaultCredentials
         {
             get
             {
-                if (IsPropertyUndefined("defaultCredentials"))
+                if (IsPropertyUndefined(DefaultCredentialsPropertyName))
                     return SmtpDefaults.UseDefaultCredentials;
-                
-                return (bool)base["defaultCredentials"];
+
+                return (bool)base[DefaultCredentialsPropertyName];
+            }
+            set
+            {
+                base[DefaultCredentialsPropertyName] = value;
             }
         }
 
@@ -424,15 +455,19 @@ namespace HLF.ContextConfig
         /// &lt;Network&gt; 'enableSsl' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("enableSsl", IsRequired = false)]
+        [ConfigurationProperty(EnableSslPropertyName, IsRequired = false)]
         public bool EnableSsl
         {
             get
             {
-                if (IsPropertyUndefined("enableSsl"))
+                if (IsPropertyUndefined(EnableSslPropertyName))
                     return SmtpDefaults.EnableSsl;
 
-                return (bool)base["enableSsl"];
+                return (bool)base[EnableSslPropertyName];
+            }
+            set
+            {
+                base[EnableSslPropertyName] = value;
             }
         }
 
@@ -440,15 +475,19 @@ namespace HLF.ContextConfig
         /// &lt;Network&gt; 'host' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("host", IsRequired = false)]
+        [ConfigurationProperty(HostPropertyName, IsRequired = false)]
         public string Host
         {
             get
             {
-                if (IsPropertyUndefined("host"))
+                if (IsPropertyUndefined(HostPropertyName))
                     return SmtpDefaults.Host;
-                
-                return (string)base["host"];
+
+                return (string)base[HostPropertyName];
+            }
+            set
+            {
+                base[HostPropertyName] = value;
             }
         }
 
@@ -456,15 +495,19 @@ namespace HLF.ContextConfig
         /// &lt;Network&gt; 'port' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("port", IsRequired = false)]
+        [ConfigurationProperty(PortPropertyName, IsRequired = false)]
         public int Port
         {
             get
             {
-                if (IsPropertyUndefined("port"))
+                if (IsPropertyUndefined(PortPropertyName))
                     return SmtpDefaults.Port;
 
-                return (int)base["port"];
+                return (int)base[PortPropertyName];
+            }
+            set
+            {
+                base[PortPropertyName] = value;
             }
         }
 
@@ -472,15 +515,19 @@ namespace HLF.ContextConfig
         /// &lt;Network&gt; 'targetName' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("targetName", IsRequired = false)]
+        [ConfigurationProperty(TargetNamePropertyName, IsRequired = false)]
         public string TargetName
         {
             get
             {
-                if (IsPropertyUndefined("targetName"))
+                if (IsPropertyUndefined(TargetNamePropertyName))
                     return SmtpDefaults.TargetName;
 
-                return (string)base["targetName"];
+                return (string)base[TargetNamePropertyName];
+            }
+            set
+            {
+                base[TargetNamePropertyName] = value;
             }
         }
     }
@@ -490,19 +537,27 @@ namespace HLF.ContextConfig
     /// </summary>
     public class SmtpSpecifiedPickupDirectoryElement : SmtpConfigurationElement
     {
+        #region const
+        internal const string PickupDirectoryLocationPropertyName = "pickupDirectoryLocation";
+        #endregion
+
         /// <summary>
         /// &lt;SpecifiedPickupDirectory&gt; 'pickupDirectoryLocation' attribute.
         /// Defaults to the base smtp settings value if not provided in this config section.
         /// </summary>
-        [ConfigurationProperty("pickupDirectoryLocation", IsRequired = false)]
+        [ConfigurationProperty(PickupDirectoryLocationPropertyName, IsRequired = false)]
         public string PickupDirectoryLocation
         {
             get
             {
-                if (IsPropertyUndefined("pickupDirectoryLocation"))
+                if (IsPropertyUndefined(PickupDirectoryLocationPropertyName))
                     return SmtpDefaults.PickupDirectoryLocation;
 
-                return (string)base["pickupDirectoryLocation"];
+                return (string)base[PickupDirectoryLocationPropertyName];
+            }
+            set
+            {
+                base[PickupDirectoryLocationPropertyName] = value;
             }
         }
     }

@@ -406,7 +406,7 @@ namespace HLF.ContextConfig
             if (Env != null)
                 FillUndefinedSmtpSettings(ReturnValue, Env.SmtpSettings);
             // fills the still undefined properties of the return value with the values from the default environment
-            if (DefaultEnv != null)
+            if (IncludeDefaults && DefaultEnv != null)
                 FillUndefinedSmtpSettings(ReturnValue, DefaultEnv.SmtpSettings);
 
             return ReturnValue;
@@ -419,8 +419,41 @@ namespace HLF.ContextConfig
         /// <param name="Source">The SmtpSettingsElement to get values from</param>
         private static void FillUndefinedSmtpSettings(SmtpSettingsElement Target, SmtpSettingsElement Source)
         {
-            if (Target.IsPropertyUndefined("defaultCredentials") && !Source.IsPropertyUndefined("defaultCredentials"))
-                Target.Network = Source.Network;
+            if (Target.IsPropertyUndefined(SmtpSettingsElement.DeliveryFormatPropertyName) && !Source.IsPropertyUndefined(SmtpSettingsElement.DeliveryFormatPropertyName))
+                Target.DeliveryFormat= Source.DeliveryFormat;
+
+            if (Target.IsPropertyUndefined(SmtpSettingsElement.DeliveryMethodPropertyName) && !Source.IsPropertyUndefined(SmtpSettingsElement.DeliveryMethodPropertyName))
+                Target.DeliveryMethod= Source.DeliveryMethod;
+
+            if (Target.IsPropertyUndefined(SmtpSettingsElement.FromPropertyName) && !Source.IsPropertyUndefined(SmtpSettingsElement.FromPropertyName))
+                Target.From = Source.From;
+
+            if (Target.Network.IsPropertyUndefined(SmtpNetworkElement.ClientDomainPropertyName) && !Source.Network.IsPropertyUndefined(SmtpNetworkElement.ClientDomainPropertyName))
+                Target.Network.ClientDomain = Source.Network.ClientDomain;
+
+            if (Target.Network.IsPropertyUndefined(SmtpNetworkElement.DefaultCredentialsPropertyName) && !Source.Network.IsPropertyUndefined(SmtpNetworkElement.DefaultCredentialsPropertyName))
+                Target.Network.UseDefaultCredentials = Source.Network.UseDefaultCredentials;
+
+            if (Target.Network.IsPropertyUndefined(SmtpNetworkElement.EnableSslPropertyName) && !Source.Network.IsPropertyUndefined(SmtpNetworkElement.EnableSslPropertyName))
+                Target.Network.EnableSsl = Source.Network.EnableSsl;
+
+           if (Target.Network.IsPropertyUndefined(SmtpNetworkElement.HostPropertyName) && !Source.Network.IsPropertyUndefined(SmtpNetworkElement.HostPropertyName))
+                Target.Network.Host = Source.Network.Host;
+
+            if (Target.Network.IsPropertyUndefined(SmtpNetworkElement.PasswordPropertyName) && !Source.Network.IsPropertyUndefined(SmtpNetworkElement.PasswordPropertyName))
+                Target.Network.Password = Source.Network.Password;
+
+            if (Target.Network.IsPropertyUndefined(SmtpNetworkElement.PortPropertyName) && !Source.Network.IsPropertyUndefined(SmtpNetworkElement.PortPropertyName))
+                Target.Network.Port = Source.Network.Port;
+
+            if (Target.Network.IsPropertyUndefined(SmtpNetworkElement.TargetNamePropertyName) && !Source.Network.IsPropertyUndefined(SmtpNetworkElement.TargetNamePropertyName))
+                Target.Network.TargetName = Source.Network.TargetName;
+
+            if (Target.Network.IsPropertyUndefined(SmtpNetworkElement.UserNamePropertyName) && !Source.Network.IsPropertyUndefined(SmtpNetworkElement.UserNamePropertyName))
+                Target.Network.UserName = Source.Network.UserName;
+
+            if (Target.SpecifiedPickupDirectory.IsPropertyUndefined(SmtpSpecifiedPickupDirectoryElement.PickupDirectoryLocationPropertyName) && !Source.SpecifiedPickupDirectory.IsPropertyUndefined(SmtpSpecifiedPickupDirectoryElement.PickupDirectoryLocationPropertyName))
+                Target.SpecifiedPickupDirectory.PickupDirectoryLocation = Source.SpecifiedPickupDirectory.PickupDirectoryLocation;
         }
         #endregion
     }
